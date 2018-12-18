@@ -1,0 +1,3 @@
+#!/bin/bash
+echo 'apt-get update && apt-get upgrade -y >> /var/log/update_script.log' >> ~/update_log.sh
+echo '0 4 * * 1  sh ~/update_log.sh' | crontab

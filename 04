@@ -1,0 +1,26 @@
+#!/bin/bash
+
+FILE=/root/hash_crontab
+FILE1=/root/hash_crontab1
+
+echo "if [ -f $FILE ]
+then
+	md5sum /etc/crontab > $FILE1
+	if ! cmp --silent $FILE $FILE1;
+	then
+		echo "crontab modified" | mail -s file modified root
+		mv $FILE1 $FILE
+	else
+		echo "crontab has not been modified"
+	fi
+else
+	md5sum /etc/crontab > $FILE
+fi" >> ~/check_etc_crontab.sh
+
+if cat /etc/crontab | grep -q @midnight
+then
+	echo "crontab exist"
+else
+	echo "@midnight sh ~/check_etc_crontab.sh" >> /etc/crontab
+fi
+
